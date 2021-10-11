@@ -48,6 +48,8 @@ def main():
             iterator = tqdm(loaders["train"])
             epoch_loss = 0.
             for idx, (encodings, labels) in enumerate(iterator):
+                if idx > 100:
+                    break
                 try:
                     encodings = encodings.to(device)
                 except Exception as e:
@@ -64,30 +66,30 @@ def main():
 
                 iterator.set_postfix({"loss": epoch_loss / (idx + 1)})
 
-    with torch.no_grad():
-        iterator = tqdm(loaders["test"])
-        epoch_loss = 0.
-        predictions = []
-        test_dataset = loaders["test"].dataset
-        for idx, (encodings, labels) in enumerate(iterator):
-            try:
-                inputs = encodings.to(device)
-            except Exception as e:
-                inputs = {key: val.to(device) for key, val in encodings.items()}
-            labels = labels.to(device)
-            outs = model(inputs, labels)
-            encodings = test_dataset.collate_fn(test_dataset.data[idx * opts.batch_size: (idx+1) * opts.batch_size])[0]
-            prediction_labels = _reconstruct_input_labels(encodings, outs["prediction"], loaders["test"].dataset.id2label)
-            predictions.extend(prediction_labels)
-            epoch_loss += outputs["loss"].item()
-            iterator.set_postfix({"loss": epoch_loss / (idx + 1)})
-    outs = loaders["test"].dataset.dumps_outs(predictions)
-    exp.log_metric('precision', outs['precision'])
-    exp.log_metric('precision', outs['recall'])
-    exp.log_metric('precision', outs['f1'])
-    with open(os.path.join(opts.log_dir, "test_output.txt"), "wt") as fp:
-        fp.write(outs)
-    torch.save(model.state_dict(), os.path.join(opts.log_dir, "model.ckpt"))
+        with torch.no_grad():
+            test_iterator = tqdm(loaders["test"])
+            epoch_loss = 0.
+            predictions = []
+            test_dataset = loaders["test"].dataset
+            for idx, (encodings, labels) in enumerate(test_iterator):
+                try:
+                    inputs = encodings.to(device)
+                except Exception as e:
+                    inputs = {key: val.to(device) for key, val in encodings.items()}
+                labels = labels.to(device)
+                outs = model(inputs, labels)
+                encodings = test_dataset.collate_fn(test_dataset.data[idx * opts.batch_size: (idx+1) * opts.batch_size])[0]
+                prediction_labels = _reconstruct_input_labels(encodings, outs["prediction"], loaders["test"].dataset.id2label)
+                predictions.extend(prediction_labels)
+                epoch_loss += outputs["loss"].item()
+                test_iterator.set_postfix({"loss": epoch_loss / (idx + 1)})
+        outs = loaders["test"].dataset.dumps_outs(predictions)
+        exp.log_metric('precision', outs['precision'])
+        exp.log_metric('precision', outs['recall'])
+        exp.log_metric('precision', outs['f1'])
+        with open(os.path.join(opts.log_dir, "test_output.txt"), "wt") as fp:
+            fp.write(outs)
+        torch.save(model.state_dict(), os.path.join(opts.log_dir, "model.ckpt"))
 
 
 if __name__ == "__main__":

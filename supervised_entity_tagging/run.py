@@ -1,3 +1,11 @@
+import comet_ml
+
+exp = Experiment(
+    api_key="dS7pA92ZgRC2kQZglwwiWB5tC",
+    project_name="cotton",
+    workspace="karthik63",
+)
+
 import numpy as np
 import os
 import torch
@@ -51,6 +59,9 @@ def main():
                 optimizer.step()
                 scheduler.step()
                 epoch_loss += outputs["loss"].item()
+
+                exp.log_metric('training_loss', outputs["loss"].item())
+
                 iterator.set_postfix({"loss": epoch_loss / (idx + 1)})
 
     with torch.no_grad():
@@ -64,15 +75,18 @@ def main():
             except Exception as e:
                 inputs = {key: val.to(device) for key, val in encodings.items()}
             labels = labels.to(device)
-            outputs = model(inputs, labels)
+            outs = model(inputs, labels)
             encodings = test_dataset.collate_fn(test_dataset.data[idx * opts.batch_size: (idx+1) * opts.batch_size])[0]
-            prediction_labels = _reconstruct_input_labels(encodings, outputs["prediction"], loaders["test"].dataset.id2label)
+            prediction_labels = _reconstruct_input_labels(encodings, outs["prediction"], loaders["test"].dataset.id2label)
             predictions.extend(prediction_labels)
             epoch_loss += outputs["loss"].item()
             iterator.set_postfix({"loss": epoch_loss / (idx + 1)})
-    outputs = loaders["test"].dataset.dumps_outputs(predictions)
+    outs = loaders["test"].dataset.dumps_outs(predictions)
+    exp.log_metric('precision', outs['precision'])
+    exp.log_metric('precision', outs['recall'])
+    exp.log_metric('precision', outs['f1'])
     with open(os.path.join(opts.log_dir, "test_output.txt"), "wt") as fp:
-        fp.write(outputs)
+        fp.write(outs)
     torch.save(model.state_dict(), os.path.join(opts.log_dir, "model.ckpt"))
 
 

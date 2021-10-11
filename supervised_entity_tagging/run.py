@@ -18,7 +18,7 @@ from utils.options import parse_arguments
 
 from models.net import EntityTagger
 from utils.dataloader import _load_file
-from supervised_entity_tagging.evaluation import compute_list_f1
+from evaluation import compute_list_f1
 
 def main():
     opts = parse_arguments()

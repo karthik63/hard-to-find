@@ -6,7 +6,8 @@ class EntityTagger(nn.Module):
     def __init__(self, nclass:int, model_name:str, **kwargs):
         super().__init__()
         self.pretrained_lm = transformers.AutoModel.from_pretrained(model_name)
-        d_model = getattr(self.pretrained_lm.config, 'd_model', 1024)
+        # d_model = getattr(self.pretrained_lm.config, 'd_model', 1024)
+        d_model = getattr(self.pretrained_lm.config, 'd_model', 768)
         self.linear_map = nn.Linear(d_model, nclass)
         self.crit = nn.CrossEntropyLoss()
 
@@ -16,7 +17,7 @@ class EntityTagger(nn.Module):
 
     def forward(self, encodings:transformers.BatchEncoding, labels:torch.LongTensor):
         encoded = self.pretrained_lm(**encodings)
-        print(encoded.last_hidden_state.shape, 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+        # print(encoded.last_hidden_state.shape, 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
         # print(d_model)
         # print(n_class)
         outputs = self.linear_map(encoded.last_hidden_state)

@@ -90,8 +90,10 @@ def main():
             outs = loaders["test"].dataset.dumps_outputs(predictions)
             print(outs[:10])
 
-            print(len(_load_file('/storage/Assignment1/fewnerd/data/supervised/test.txt')[:len(outs)]))
-            print(len(outs))
+            print(len(_load_file('/storage/Assignment1/fewnerd/data/supervised/test.txt')[:len(outs)]), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa')
+            print(len(outs), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+            print(len(outs[0]), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+            print(len(outs[1]), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
 
             out_metrics = compute_list_f1(_load_file('/storage/Assignment1/fewnerd/data/supervised/test.txt')[:len(outs)], outs)
             exp.log_metric('precision', float(out_metrics['precision']))

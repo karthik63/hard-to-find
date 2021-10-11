@@ -51,8 +51,8 @@ def main():
             iterator = tqdm(loaders["train"])
             epoch_loss = 0.
             for idx, (encodings, labels) in enumerate(iterator):
-                if idx > 10:
-                    break
+                # if idx > 10:
+                #     break
                 try:
                     encodings = encodings.to(device)
                 except Exception as e:
@@ -75,8 +75,8 @@ def main():
                 predictions = []
                 test_dataset = loaders["test"].dataset
                 for idx, (encodings, labels) in enumerate(test_iterator):
-                    if idx > 10:
-                        break
+                    # if idx > 10:
+                    #     break
                     try:
                         inputs = encodings.to(device)
                     except Exception as e:
@@ -92,8 +92,8 @@ def main():
 
             ground_truth = process_txt_file('/storage/Assignment1/fewnerd/data/supervised/test.txt')
 
-            print(ground_truth[:2])
-            print(predictions[:2])
+            # print(ground_truth[:2])
+            # print(predictions[:2])
 
             out_metrics = compute_list_f1(ground_truth[:len(predictions)], predictions)
             exp.log_metric('precision', float(out_metrics['precision']))

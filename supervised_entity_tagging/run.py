@@ -49,7 +49,7 @@ def main():
             iterator = tqdm(loaders["train"])
             epoch_loss = 0.
             for idx, (encodings, labels) in enumerate(iterator):
-                if idx > 100:
+                if idx > 10:
                     break
                 try:
                     encodings = encodings.to(device)
@@ -73,7 +73,7 @@ def main():
                 predictions = []
                 test_dataset = loaders["test"].dataset
                 for idx, (encodings, labels) in enumerate(test_iterator):
-                    if idx > 100:
+                    if idx > 10:
                         break
                     try:
                         inputs = encodings.to(device)
@@ -87,9 +87,10 @@ def main():
                     epoch_loss += outputs["loss"].item()
                     test_iterator.set_postfix({"loss": epoch_loss / (idx + 1)})
             outs = loaders["test"].dataset.dumps_outputs(predictions)
-            exp.log_metric('precision', outs['precision'])
-            exp.log_metric('precision', outs['recall'])
-            exp.log_metric('precision', outs['f1'])
+            print(type(outs['precision']))
+            exp.log_metric('precision', float(outs['precision']))
+            exp.log_metric('recall', float(outs['recall']))
+            exp.log_metric('f1', float(outs['f1']))
             with open(os.path.join(opts.log_dir, "test_output.txt"), "wt") as fp:
                 fp.write(outs)
             torch.save(model.state_dict(), os.path.join(opts.log_dir, "model.ckpt"))

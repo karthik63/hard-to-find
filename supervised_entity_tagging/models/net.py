@@ -16,7 +16,7 @@ class EntityTagger(nn.Module):
 
     def forward(self, encodings:transformers.BatchEncoding, labels:torch.LongTensor):
         encoded = self.pretrained_lm(**encodings)
-        print(encoded.last_hidden_state.shape)
+        print(encoded.last_hidden_state.shape, 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
         # print(d_model)
         # print(n_class)
         outputs = self.linear_map(encoded.last_hidden_state)

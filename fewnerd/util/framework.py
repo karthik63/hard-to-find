@@ -449,7 +449,12 @@ class FewShotNERFramework:
                 sys.stdout.flush()
 
                 if (it + 1) % val_step == 0:
-                    _, _, f1, _, _, _, _ = self.eval(model, val_iter)
+
+                    eval_prec, eval_rec, f1, _, _, _, _ = self.eval(model, val_iter)
+
+                    exp.log_metric('eval_f1', f1)
+                    exp.log_metric('eval_precision', eval_prec)
+                    exp.log_metric('eval_recall', eval_rec)
                     model.train()
                     if f1 > best_f1:
                         print('Best checkpoint')

@@ -19,6 +19,7 @@ from utils.options import parse_arguments
 from models.net import EntityTagger
 from utils.dataloader import _load_file
 from evaluation import compute_list_f1
+from evaluation import process_txt_file
 
 def main():
     opts = parse_arguments()
@@ -88,20 +89,13 @@ def main():
                     epoch_loss += outputs["loss"].item()
                     test_iterator.set_postfix({"loss": epoch_loss / (idx + 1)})
             outs = loaders["test"].dataset.dumps_outputs(predictions)
-            with open('temp_dump.txt', 'w') as f:
-                f.write(outs)
 
-            predictions_loaded_correctly = _load_file('/storage/Assignment1/supervised_entity_tagging/run.py')
-            ground_truth = _load_file('/storage/Assignment1/fewnerd/data/supervised/test.txt')
-            print(predictions_loaded_correctly[:100])
-            print('ppppppppppppppppppppppppppppppppppppp')
-            print(ground_truth[:100])
-            print(len(ground_truth[:len(predictions_loaded_correctly)]), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa')
-            print(len(predictions_loaded_correctly), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
-            print(len(predictions_loaded_correctly[0]), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
-            print(len(predictions_loaded_correctly[1]), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+            ground_truth = process_txt_file('/storage/Assignment1/fewnerd/data/supervised/test.txt')
 
-            out_metrics = compute_list_f1(_load_file('/storage/Assignment1/fewnerd/data/supervised/test.txt')[:len(outs)], outs)
+            print(ground_truth[:2])
+            print(predictions[:2])
+
+            out_metrics = compute_list_f1(ground_truth[:len(predictions)], predictions)
             exp.log_metric('precision', float(out_metrics['precision']))
             exp.log_metric('recall', float(out_metrics['recall']))
             exp.log_metric('f1', float(out_metrics['f1']))

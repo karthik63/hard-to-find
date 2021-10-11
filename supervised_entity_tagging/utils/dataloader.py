@@ -81,7 +81,7 @@ class EntityDataset(torch.utils.data.Dataset):
         return batch
 
     def dumps_outputs(self, predictions:List[List[str]]):
-        assert len(predictions) == len(self.data)
+        # assert len(predictions) == len(self.data)
         outputs = ''
         for instance, pred in zip(self.data, predictions):
             if len(pred) < len(instance[0]):

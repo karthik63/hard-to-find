@@ -5,7 +5,7 @@ import glob
 
 
 def define_arguments(parser):
-    parser.add_argument('--root', type=str, default="./data", help="")
+    parser.add_argument('--root', type=str, default="/storage/Assignment1/fewnerd/data/supervised", help="")
     parser.add_argument('--batch-size', type=int, default=4, help="")
     parser.add_argument('--num-workers', type=int, default=0, help="")
     parser.add_argument('--no-gpu', action="store_true", help="don't use gpu")

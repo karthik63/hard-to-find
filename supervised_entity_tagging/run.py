@@ -86,7 +86,7 @@ def main():
                     predictions.extend(prediction_labels)
                     epoch_loss += outputs["loss"].item()
                     test_iterator.set_postfix({"loss": epoch_loss / (idx + 1)})
-            outs = loaders["test"].dataset.dumps_outs(predictions)
+            outs = loaders["test"].dataset.dumps_outputs(predictions)
             exp.log_metric('precision', outs['precision'])
             exp.log_metric('precision', outs['recall'])
             exp.log_metric('precision', outs['f1'])

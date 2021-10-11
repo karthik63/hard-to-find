@@ -73,6 +73,8 @@ def main():
                 predictions = []
                 test_dataset = loaders["test"].dataset
                 for idx, (encodings, labels) in enumerate(test_iterator):
+                    if idx > 100:
+                        break
                     try:
                         inputs = encodings.to(device)
                     except Exception as e:

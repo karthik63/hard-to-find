@@ -1,5 +1,6 @@
-import comet_ml
+from comet_ml import Experiment
 
+# Create an experiment with your api key
 exp = Experiment(
     api_key="dS7pA92ZgRC2kQZglwwiWB5tC",
     project_name="cotton",

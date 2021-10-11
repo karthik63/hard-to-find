@@ -88,17 +88,18 @@ def main():
                     epoch_loss += outputs["loss"].item()
                     test_iterator.set_postfix({"loss": epoch_loss / (idx + 1)})
             outs = loaders["test"].dataset.dumps_outputs(predictions)
-            # with open('temp_dump.txt', 'w') as f:
-            #     f.write(ou)
+            with open('temp_dump.txt', 'w') as f:
+                f.write(outs)
 
+            predictions_loaded_correctly = _load_file('/storage/Assignment1/supervised_entity_tagging/run.py')
             ground_truth = _load_file('/storage/Assignment1/fewnerd/data/supervised/test.txt')
-            print(predictions[:100])
+            print(predictions_loaded_correctly[:100])
             print('ppppppppppppppppppppppppppppppppppppp')
             print(ground_truth[:100])
-            print(len(ground_truth[:len(predictions)]), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa')
-            print(len(predictions), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
-            print(len(outs[0]), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
-            print(len(outs[1]), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+            print(len(ground_truth[:len(predictions_loaded_correctly)]), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa')
+            print(len(predictions_loaded_correctly), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+            print(len(predictions_loaded_correctly[0]), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+            print(len(predictions_loaded_correctly[1]), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
 
             out_metrics = compute_list_f1(_load_file('/storage/Assignment1/fewnerd/data/supervised/test.txt')[:len(outs)], outs)
             exp.log_metric('precision', float(out_metrics['precision']))

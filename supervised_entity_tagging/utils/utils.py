@@ -1,5 +1,6 @@
 import torch
-from transformers.optimization import AdamW, get_scheduler
+from transformers import get_scheduler
+from transformers.optimization import AdamW
 from transformers.trainer_pt_utils import get_parameter_names
 
 def create_optimizer_and_scheduler(model:torch.nn.Module, learning_rate:float, weight_decay:float, warmup_step:int, train_step:int, adam_beta1:float=0.9, adam_beta2:float=0.999, adam_epsilon:float=1e-8):

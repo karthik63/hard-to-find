@@ -51,6 +51,8 @@ def compute_list_f1(annotations, predictions):
     npred = sum([t[2] for t in matchings])
     return {
         "precision": nmatch / npred,
+        'ngold': ngold,
+        'npred': npred,
         "recall": nmatch / ngold,
         "f1": nmatch * 2 / (npred + ngold)
     }

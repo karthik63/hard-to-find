@@ -92,7 +92,7 @@ def main():
             ground_truth = _load_file('/storage/Assignment1/fewnerd/data/supervised/test.txt')
             print(outs[:100])
             print(ground_truth[:100])
-            print(len(_)[:len(outs)]), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa')
+            print(len(ground_truth[:len(outs)]), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa')
             print(len(outs), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
             print(len(outs[0]), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
             print(len(outs[1]), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')

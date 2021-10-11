@@ -17,7 +17,8 @@ from utils.utils import create_optimizer_and_scheduler
 from utils.options import parse_arguments
 
 from models.net import EntityTagger
-
+from utils.dataloader import _load_file
+from evaluation import compute_list_f1
 
 def main():
     opts = parse_arguments()
@@ -87,10 +88,12 @@ def main():
                     epoch_loss += outputs["loss"].item()
                     test_iterator.set_postfix({"loss": epoch_loss / (idx + 1)})
             outs = loaders["test"].dataset.dumps_outputs(predictions)
-            print(outs)
-            exp.log_metric('precision', float(outs['precision']))
-            exp.log_metric('recall', float(outs['recall']))
-            exp.log_metric('f1', float(outs['f1']))
+            print(outs[:10])
+
+            out_metrics = compute_list_f1(_load_file('/storage/Assignment1/fewnerd/data/supervised')[:len(outs)], outs)
+            exp.log_metric('precision', float(out_metrics['precision']))
+            exp.log_metric('recall', float(out_metrics['recall']))
+            exp.log_metric('f1', float(out_metrics['f1']))
             with open(os.path.join(opts.log_dir, "test_output.txt"), "wt") as fp:
                 fp.write(outs)
             torch.save(model.state_dict(), os.path.join(opts.log_dir, "model.ckpt"))

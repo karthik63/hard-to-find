@@ -88,9 +88,11 @@ def main():
                     epoch_loss += outputs["loss"].item()
                     test_iterator.set_postfix({"loss": epoch_loss / (idx + 1)})
             outs = loaders["test"].dataset.dumps_outputs(predictions)
-            print(outs[:10])
 
-            print(len(_load_file('/storage/Assignment1/fewnerd/data/supervised/test.txt')[:len(outs)]), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa')
+            ground_truth = _load_file('/storage/Assignment1/fewnerd/data/supervised/test.txt')
+            print(outs[:100])
+            print(ground_truth[:100])
+            print(len(_)[:len(outs)]), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa')
             print(len(outs), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
             print(len(outs[0]), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
             print(len(outs[1]), 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')

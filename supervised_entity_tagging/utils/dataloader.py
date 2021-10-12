@@ -20,12 +20,6 @@ def _construct_input_batch(sentences: List[List[str]], labels: List[List[str]], 
             return_tensors='pt'
         )
 
-    encoded: BatchEncoding = tokenizer(
-        text=sentences,
-        max_length=max_length,
-        padding=True,
-    )
-
     label_tensor = - torch.ones_like(encoded.input_ids)
 
     for ind, sentence_labels in enumerate(labels):

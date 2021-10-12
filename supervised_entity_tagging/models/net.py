@@ -5,6 +5,7 @@ import torch
 class EntityTagger(nn.Module):
     def __init__(self, nclass:int, model_name:str, **kwargs):
         super().__init__()
+        self.model_name = model_name
         self.pretrained_lm = transformers.AutoModel.from_pretrained(model_name)
         # d_model = getattr(self.pretrained_lm.config, 'd_model', 1024)
         d_model = getattr(self.pretrained_lm.config, 'd_model', 768)
@@ -16,6 +17,8 @@ class EntityTagger(nn.Module):
         return self.crit(logits[mask], labels[mask])
 
     def forward(self, encodings:transformers.BatchEncoding, labels:torch.LongTensor):
+        if 'distilbert' in self.model_name:
+            encodings.remove('token_type_ids')
         encoded = self.pretrained_lm(**encodings)
         print(encoded.last_hidden_state.shape, 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
         # print(d_model)

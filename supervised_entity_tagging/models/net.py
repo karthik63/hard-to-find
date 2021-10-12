@@ -18,7 +18,7 @@ class EntityTagger(nn.Module):
 
     def forward(self, encodings:transformers.BatchEncoding, labels:torch.LongTensor):
         if 'distilbert' in self.model_name:
-            encodings.remove('token_type_ids')
+            encodings.pop('token_type_ids')
         encoded = self.pretrained_lm(**encodings)
         print(encoded.last_hidden_state.shape, 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
         # print(d_model)

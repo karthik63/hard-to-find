@@ -37,6 +37,9 @@ def main():
         model_name=opts.model_name
     )
 
+    if opts.restore:
+        model.load_state_dict(torch.load('/storage/Assignment1/supervised_entity_tagging/log/model.ckpt'))
+
     if opts.gpu.count(",") > 0:
         model = torch.nn.DataParallel(model)
 
@@ -51,8 +54,8 @@ def main():
             iterator = tqdm(loaders["train"])
             epoch_loss = 0.
             for idx, (encodings, labels) in enumerate(iterator):
-                # if idx > 10:
-                #     break
+                if idx > 10:
+                    break
                 try:
                     encodings = encodings.to(device)
                 except Exception as e:
@@ -75,8 +78,8 @@ def main():
                 predictions = []
                 test_dataset = loaders["test"].dataset
                 for idx, (encodings, labels) in enumerate(test_iterator):
-                    # if idx > 10:
-                    #     break
+                    if idx > 100:
+                        break
                     try:
                         inputs = encodings.to(device)
                     except Exception as e:

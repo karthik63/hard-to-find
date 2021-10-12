@@ -20,6 +20,8 @@ def define_arguments(parser):
     parser.add_argument('--train-epoch', type=int, default=25, help='epochs to train')
     parser.add_argument('--test-only', action="store_true", help='is testing')
     parser.add_argument('--clean-log-dir', action="store_true", help='is testing')
+    parser.add_argument('--restore', action="store_true", help='if restore')
+    parser.add_argument('--restore_path', default="", help='restore path', type=str)
 
 
 def parse_arguments():

@@ -6,8 +6,8 @@ class EntityTagger(nn.Module):
     def __init__(self, nclass:int, model_name:str, **kwargs):
         super().__init__()
         self.pretrained_lm = transformers.AutoModel.from_pretrained(model_name)
-        d_model = getattr(self.pretrained_lm.config, 'd_model', 1024)
-        # d_model = getattr(self.pretrained_lm.config, 'd_model', 768)
+        # d_model = getattr(self.pretrained_lm.config, 'd_model', 1024)
+        d_model = getattr(self.pretrained_lm.config, 'd_model', 768)
         self.linear_map = nn.Linear(d_model, nclass)
         self.crit = nn.CrossEntropyLoss()
 

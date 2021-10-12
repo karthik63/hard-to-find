@@ -39,6 +39,7 @@ def main():
 
     if opts.restore:
         model.load_state_dict(torch.load('/storage/Assignment1/supervised_entity_tagging/log/model.ckpt'))
+        print('DONE RESTORING')
 
     if opts.gpu.count(",") > 0:
         model = torch.nn.DataParallel(model)

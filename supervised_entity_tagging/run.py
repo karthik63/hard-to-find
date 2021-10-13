@@ -39,7 +39,7 @@ def main():
 
     layer_filter = []
     for i in range(20+1):
-        layer_filter.append('layer.' + str(i))
+        layer_filter.append('.layer.' + str(i) + '.')
 
     if opts.freeze:
         for name, param in model.named_parameters():

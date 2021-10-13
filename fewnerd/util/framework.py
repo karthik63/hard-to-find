@@ -557,8 +557,8 @@ class FewShotNERFramework:
                         label = label.cuda()
                     logits, pred = model(support, query)
 
-                    print('ooooooooooooooooooooooo', support)
-                    print('ooooooooooooooooooooooo', query)
+                    # print('ooooooooooooooooooooooo', support)
+                    # print('ooooooooooooooooooooooo', query)
 
                     if self.viterbi:
                         pred = self.viterbi_decode(logits, query['label'])

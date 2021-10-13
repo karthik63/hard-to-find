@@ -37,7 +37,7 @@ def main():
         model_name=opts.model_name
     )
 
-    for a in model.parameters():
+    for a in model.modules():
         print('ooooooooooo', a)
 
     if opts.restore:

@@ -22,6 +22,7 @@ def define_arguments(parser):
     parser.add_argument('--clean-log-dir', action="store_true", help='is testing')
     parser.add_argument('--restore', action="store_true", help='if restore')
     parser.add_argument('--restore_path', default="", help='restore path', type=str)
+    parser.add_argument('--freeze', action="store_true", help='freeze layers?')
 
 
 def parse_arguments():

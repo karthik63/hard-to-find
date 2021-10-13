@@ -70,7 +70,6 @@ def main():
     parser.add_argument('--use_sampled_data', action='store_true',
            help='use released sampled data, the data should be stored at "data/episode-data/" ')
 
-
     # only for bert / roberta
     parser.add_argument('--pretrain_ckpt', default=None,
            help='bert / roberta pre-trained checkpoint')

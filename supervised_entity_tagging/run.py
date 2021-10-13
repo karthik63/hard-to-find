@@ -38,7 +38,7 @@ def main():
     )
 
     layer_filter = []
-    for i in range(20+1):
+    for i in range(22):
         layer_filter.append('.layer.' + str(i) + '.')
 
     if opts.freeze:

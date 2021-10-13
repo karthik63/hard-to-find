@@ -304,7 +304,7 @@ def collate_fn(data):
             batch_query[k] = torch.stack(batch_query[k], 0)
     batch_support['label'] = [torch.tensor(tag_list).long() for tag_list in batch_support['label']]
     batch_query['label'] = [torch.tensor(tag_list).long() for tag_list in batch_query['label']]
-    return batch_support, batch_query, ba
+    return batch_support, batch_query, batch_query_words, batch_query_labels
 
 def get_loader(filepath, tokenizer, N, K, Q, batch_size, max_length, 
         num_workers=8, collate_fn=collate_fn, ignore_index=-1, use_sampled_data=True):

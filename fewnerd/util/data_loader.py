@@ -286,12 +286,16 @@ class FewShotNERDataset(FewShotNERDatasetWithRandomSampling):
 def collate_fn(data):
     batch_support = {'word': [], 'mask': [], 'label':[], 'sentence_num':[], 'text_mask':[]}
     batch_query = {'word': [], 'mask': [], 'label':[], 'sentence_num':[], 'label2tag':[], 'text_mask':[]}
-    support_sets, query_sets, _, _ = zip(*data)
+    batch_query_words = []
+    batch_query_labels = []
+    support_sets, query_sets, query_words, query_labels = zip(*data)
     for i in range(len(support_sets)):
         for k in batch_support:
             batch_support[k] += support_sets[i][k]
         for k in batch_query:
             batch_query[k] += query_sets[i][k]
+        batch_query_words.append(query_words[i])
+        batch_query_labels.append(query_labels[i])
     for k in batch_support:
         if k != 'label' and k != 'sentence_num':
             batch_support[k] = torch.stack(batch_support[k], 0)
@@ -300,7 +304,7 @@ def collate_fn(data):
             batch_query[k] = torch.stack(batch_query[k], 0)
     batch_support['label'] = [torch.tensor(tag_list).long() for tag_list in batch_support['label']]
     batch_query['label'] = [torch.tensor(tag_list).long() for tag_list in batch_query['label']]
-    return batch_support, batch_query
+    return batch_support, batch_query, ba
 
 def get_loader(filepath, tokenizer, N, K, Q, batch_size, max_length, 
         num_workers=8, collate_fn=collate_fn, ignore_index=-1, use_sampled_data=True):

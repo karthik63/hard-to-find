@@ -548,7 +548,13 @@ class FewShotNERFramework:
         with torch.no_grad():
             it = 0
             while it + 1 < eval_iter:
-                for _, (support, query) in tqdm(enumerate(eval_dataset)):
+                for _, (support, query, query_words, query_labels) in tqdm(enumerate(eval_dataset)):
+
+                    print('AAAAAAAAAAA', query_words)
+                    print('AAAAAAAAAAA', len(query_words))
+                    print('AAAAAAAAAAA', query_labels)
+                    print('AAAAAAAAAAA', len(query_labels))
+
                     if torch.cuda.is_available():
                         for k in support:
                             if k != 'label' and k != 'sentence_num':

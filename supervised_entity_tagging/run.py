@@ -37,8 +37,8 @@ def main():
         model_name=opts.model_name
     )
 
-    for a in model.modules():
-        print('ooooooooooo', a)
+    for a, b in model.named_parameters():
+        print('ooooooooooo', a, b)
 
     if opts.restore:
         model.load_state_dict(torch.load('/storage/Assignment1/supervised_entity_tagging/log/model.ckpt'))

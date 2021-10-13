@@ -1,5 +1,6 @@
 # import comet_ml at the top of your file
 from comet_ml import Experiment
+from tqdm import tqdm
 
 # Create an experiment with your api key
 exp = Experiment(
@@ -547,7 +548,7 @@ class FewShotNERFramework:
         with torch.no_grad():
             it = 0
             while it + 1 < eval_iter:
-                for _, (support, query) in enumerate(eval_dataset):
+                for _, (support, query) in tqdm(enumerate(eval_dataset)):
                     if torch.cuda.is_available():
                         for k in support:
                             if k != 'label' and k != 'sentence_num':

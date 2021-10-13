@@ -76,40 +76,81 @@ def main():
 
                 iterator.set_postfix({"loss": epoch_loss / (idx + 1)})
 
-            with torch.no_grad():
-                test_iterator = tqdm(loaders["test"])
-                epoch_loss = 0.
-                predictions = []
-                test_dataset = loaders["test"].dataset
-                for idx, (encodings, labels) in enumerate(test_iterator):
-                    # if idx > 100:
-                    #     break
-                    try:
-                        inputs = encodings.to(device)
-                    except Exception as e:
-                        inputs = {key: val.to(device) for key, val in encodings.items()}
-                    labels = labels.to(device)
-                    outs = model(inputs, labels)
-                    encodings = test_dataset.collate_fn(test_dataset.data[idx * opts.batch_size: (idx+1) * opts.batch_size])[0]
-                    prediction_labels = _reconstruct_input_labels(encodings, outs["prediction"], loaders["test"].dataset.id2label)
-                    predictions.extend(prediction_labels)
-                    epoch_loss += outputs["loss"].item()
-                    test_iterator.set_postfix({"loss": epoch_loss / (idx + 1)})
-            outs = loaders["test"].dataset.dumps_outputs(predictions)
+                if idx%4000 == 0:
+                    with torch.no_grad():
+                        test_iterator = tqdm(loaders["test"])
+                        epoch_loss = 0.
+                        predictions = []
+                        test_dataset = loaders["test"].dataset
+                        for idx, (encodings, labels) in enumerate(test_iterator):
+                            if idx > 500:
+                                break
+                            try:
+                                inputs = encodings.to(device)
+                            except Exception as e:
+                                inputs = {key: val.to(device) for key, val in encodings.items()}
+                            labels = labels.to(device)
+                            outs = model(inputs, labels)
+                            encodings = test_dataset.collate_fn(
+                                test_dataset.data[idx * opts.batch_size: (idx + 1) * opts.batch_size])[0]
+                            prediction_labels = _reconstruct_input_labels(encodings, outs["prediction"],
+                                                                          loaders["test"].dataset.id2label)
+                            predictions.extend(prediction_labels)
+                            epoch_loss += outputs["loss"].item()
+                            test_iterator.set_postfix({"loss": epoch_loss / (idx + 1)})
+                    outs = loaders["test"].dataset.dumps_outputs(predictions)
 
-            ground_truth = process_txt_file('/storage/Assignment1/fewnerd/data/supervised/test.txt')
+                    ground_truth = process_txt_file('/storage/Assignment1/fewnerd/data/supervised/test.txt')
 
-            # print(ground_truth[:2])
-            # print(predictions[:2])
+                    # print(ground_truth[:2])
+                    # print(predictions[:2])
 
-            out_metrics = compute_list_f1(ground_truth[:len(predictions)], predictions)
-            exp.log_metric('precision', float(out_metrics['precision']))
-            exp.log_metric('recall', float(out_metrics['recall']))
-            exp.log_metric('f1', float(out_metrics['f1']))
-            print(out_metrics, 'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF')
-            with open(os.path.join(opts.log_dir, "test_output.txt"), "wt") as fp:
-                fp.write(outs)
-            torch.save(model.state_dict(), os.path.join(opts.log_dir, "model.ckpt"))
+                    out_metrics = compute_list_f1(ground_truth[:len(predictions)], predictions)
+                    exp.log_metric('precision', float(out_metrics['precision']))
+                    exp.log_metric('recall', float(out_metrics['recall']))
+                    exp.log_metric('f1', float(out_metrics['f1']))
+                    print(out_metrics, 'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF')
+                    with open(os.path.join(opts.log_dir, "test_output.txt"), "wt") as fp:
+                        fp.write(outs)
+                    torch.save(model.state_dict(), os.path.join(opts.log_dir, "model.ckpt"))
+
+                    #############################################################################################################
+
+                    with torch.no_grad():
+                        test_iterator = tqdm(loaders["test"])
+                        epoch_loss = 0.
+                        predictions = []
+                        test_dataset = loaders["test"].dataset
+                        for idx, (encodings, labels) in enumerate(test_iterator):
+                            try:
+                                inputs = encodings.to(device)
+                            except Exception as e:
+                                inputs = {key: val.to(device) for key, val in encodings.items()}
+                            labels = labels.to(device)
+                            outs = model(inputs, labels)
+                            encodings = test_dataset.collate_fn(
+                                test_dataset.data[idx * opts.batch_size: (idx + 1) * opts.batch_size])[0]
+                            prediction_labels = _reconstruct_input_labels(encodings, outs["prediction"],
+                                                                          loaders["test"].dataset.id2label)
+                            predictions.extend(prediction_labels)
+                            epoch_loss += outputs["loss"].item()
+                            test_iterator.set_postfix({"loss": epoch_loss / (idx + 1)})
+                    outs = loaders["test"].dataset.dumps_outputs(predictions)
+
+                    ground_truth = process_txt_file('/storage/Assignment1/fewnerd/data/supervised/test.txt')
+
+                    # print(ground_truth[:2])
+                    # print(predictions[:2])
+
+                    out_metrics = compute_list_f1(ground_truth[:len(predictions)], predictions)
+                    exp.log_metric('precision', float(out_metrics['precision']))
+                    exp.log_metric('recall', float(out_metrics['recall']))
+                    exp.log_metric('f1', float(out_metrics['f1']))
+                    print(out_metrics, 'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF')
+                    with open(os.path.join(opts.log_dir, "test_output.txt"), "wt") as fp:
+                        fp.write(outs)
+                    torch.save(model.state_dict(), os.path.join(opts.log_dir, "model.ckpt"))
+
 
 
 if __name__ == "__main__":

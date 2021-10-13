@@ -556,6 +556,10 @@ class FewShotNERFramework:
                         label = torch.cat(query['label'], 0)
                         label = label.cuda()
                     logits, pred = model(support, query)
+
+                    print('ooooooooooooooooooooooo', logits)
+                    print('ooooooooooooooooooooooo', pred)
+
                     if self.viterbi:
                         pred = self.viterbi_decode(logits, query['label'])
 

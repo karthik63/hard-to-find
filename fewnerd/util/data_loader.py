@@ -286,7 +286,7 @@ class FewShotNERDataset(FewShotNERDatasetWithRandomSampling):
 def collate_fn(data):
     batch_support = {'word': [], 'mask': [], 'label':[], 'sentence_num':[], 'text_mask':[]}
     batch_query = {'word': [], 'mask': [], 'label':[], 'sentence_num':[], 'label2tag':[], 'text_mask':[]}
-    support_sets, query_sets = zip(*data)
+    support_sets, query_sets, _, _ = zip(*data)
     for i in range(len(support_sets)):
         for k in batch_support:
             batch_support[k] += support_sets[i][k]

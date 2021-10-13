@@ -37,8 +37,16 @@ def main():
         model_name=opts.model_name
     )
 
-    for a, b in model.named_parameters():
-        print('ooooooooooo', a)
+    layer_filter = []
+    for i in range(20+1):
+        layer_filter.append('layer.' + str(i))
+
+    if opts.freeze:
+        for name, param in model.named_parameters():
+            test_list = [ln in name for ln in layer_filter]
+            print(test_list)
+            if any(test_list):
+                param.requires_grad = False
 
     if opts.restore:
         model.load_state_dict(torch.load('/storage/Assignment1/supervised_entity_tagging/log/model.ckpt'))

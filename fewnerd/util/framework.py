@@ -281,8 +281,11 @@ class FewShotNERModel(nn.Module):
         pred_row = pred.cpu().numpy().tolist()
         label_row = label.cpu().numpy().tolist()
 
-        # print('CCCCCCCCCCCC', len(pred_row))
-        # print('CCCCCCCCCCCCCCCCCCCCCCCC', len(label_row))
+        print('CCCCCCCCCCCC', len(pred_row))
+        print('CCCCCCCCCCCCCCCCCCCCCCCC', len(label_row))
+
+        print('ddddddddd', pred_row)
+        print('dddddddd', query['label2tag'][0])
 
         prev_len = 0
 

@@ -275,12 +275,15 @@ class FewShotNERModel(nn.Module):
         print('AAAAAAAAAAAAAAAAAAAAAAAA', pred.shape)
         print('AAAAAAAAAAAAAAAAAAAAAAAAAA', pred[0].cpu().numpy())
 
-        for i, row in enumerate(pred):
-            pred_row = pred[i].cpu().numpy().tolist()
-            label_row = label[i].cpu().numpy().tolist()
+        pred_row = pred.cpu().numpy().tolist()
+        label_row = label.cpu().numpy().tolist()
 
-            pred_row, label_row = self.__delete_ignore_index(pred_row, label_row)
-            list_of_predictions.append(pred_row)
+        pred_row, label_row = self.__delete_ignore_index(pred_row, label_row)
+
+        print('CCCCCCCCCCCC', len(pred_row))
+        print('CCCCCCCCCCCCCCCCCCCCCCCC', len(label_row))
+
+        list_of_predictions.append(pred_row)
 
         return list_of_predictions
 

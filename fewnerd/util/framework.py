@@ -588,6 +588,8 @@ class FewShotNERFramework:
                         label = label.cuda()
                     logits, pred = model(support, query)
 
+                    print('AAAAAAAAAAAA', logits.shape)
+                    print('AAAAAAAAAAAAA', pred.shape)
                     queries_to_save = query_labels[0]
                     labels_to_save = model.get_predictions(pred, label)
 

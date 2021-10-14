@@ -307,14 +307,14 @@ def collate_fn(data):
     return batch_support, batch_query, batch_query_words, batch_query_labels
 
 def get_loader(filepath, tokenizer, N, K, Q, batch_size, max_length, 
-        num_workers=8, collate_fn=collate_fn, ignore_index=-1, use_sampled_data=True):
+        num_workers=8, collate_fn=collate_fn, ignore_index=-1, use_sampled_data=True, shuffle=True):
     if not use_sampled_data:
         dataset = FewShotNERDatasetWithRandomSampling(filepath, tokenizer, N, K, Q, max_length, ignore_label_id=ignore_index)
     else:
         dataset = FewShotNERDataset(filepath, tokenizer, max_length, ignore_label_id=ignore_index)
     data_loader = data.DataLoader(dataset=dataset,
             batch_size=batch_size,
-            shuffle=True,
+            shuffle=shuffle,
             pin_memory=True,
             num_workers=num_workers,
             collate_fn=collate_fn)

@@ -127,7 +127,7 @@ def main():
     val_data_loader = get_loader(opt.dev, tokenizer,
             N=N, K=K, Q=Q, batch_size=batch_size, max_length=max_length, ignore_index=opt.ignore_index, use_sampled_data=opt.use_sampled_data)
     test_data_loader = get_loader(opt.test, tokenizer,
-            N=N, K=K, Q=Q, batch_size=batch_size, max_length=max_length, ignore_index=opt.ignore_index, use_sampled_data=opt.use_sampled_data)
+            N=N, K=K, Q=Q, batch_size=batch_size, max_length=max_length, ignore_index=opt.ignore_index, use_sampled_data=opt.use_sampled_data, shuffle=False)
 
         
     prefix = '-'.join([model_name, opt.mode, str(N), str(K), 'seed'+str(opt.seed)])

@@ -273,6 +273,7 @@ class FewShotNERModel(nn.Module):
 
         print('AAAAAAAAAAAAAAAAAAAAAAAAAA', a)
         print('AAAAAAAAAAAAAAAAAAAAAAAA', pred.shape)
+        print('AAAAAAAAAAAAAAAAAAAAAAAA', label.shape)
         print('AAAAAAAAAAAAAAAAAAAAAAAAAA', pred[0].cpu().numpy())
 
         pred_row = pred.cpu().numpy().tolist()

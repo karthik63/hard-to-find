@@ -227,6 +227,17 @@ python3 train_demo.py  --mode inter
 --max_length 32 --model proto --load_ckpt checkpoint/proto-inter-10-5-seed0-proto_inter_10_5_10.pth.tar --only_test 
 --use_sampled-data
 
+python3 train_demo.py  --mode inter 
+--lr 1e-4 --batch_size 1 --trainN 10 --N 10 --K 5 --Q 1 
+--train_iter 10000 --val_iter 500 --test_iter 10000 --val_step 1000 
+--max_length 32 --model proto --load_ckpt checkpoint/proto-inter-10-5-seed0-proto_inter_10_5_10.pth.tar --only_test 
+--use_sampled-data
+
+
+python3 train_demo.py  --mode inter \
+--lr 1e-4 --batch_size 4 --trainN 10 --N 10 --K 1 --Q 1 \
+--train_iter 10000 --val_iter 500 --test_iter 5000 --val_step 1000 \
+--max_length 64 --model structshot --tau 0.32
 
 ## Citation
 

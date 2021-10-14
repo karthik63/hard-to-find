@@ -630,7 +630,7 @@ class FewShotNERFramework:
                     queries_to_save = query_labels[0]
                     labels_to_save = model.get_predictions(pred, label, queries_to_save, query)
 
-                    to_save.append(str({'query': {'label': labels_to_save}}) + '\n')
+                    to_save.append(json.dumps({'query': {'label': labels_to_save}}) + '\n')
 
                     # print('AAAAAAAAAAAAAAAAAA', queries_to_save)
                     # print('AAAAAAAAAAAAAAAAAA', len(queries_to_save))

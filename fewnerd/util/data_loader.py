@@ -202,7 +202,7 @@ class FewShotNERDatasetWithRandomSampling(data.Dataset):
         self.label2tag = {idx:tag for idx, tag in enumerate(distinct_tags)}
         support_set = self.__populate__(support_idx)
         query_set = self.__populate__(query_idx, savelabeldic=True)
-        return support_set, query_set, None
+        return support_set, query_set, query_idx['word'], query_idx['label']
     
     def __len__(self):
         return 100000

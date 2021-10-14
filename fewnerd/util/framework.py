@@ -270,8 +270,8 @@ class FewShotNERModel(nn.Module):
         list_of_labels = []
 
         for i, row in enumerate(pred):
-            pred_row = pred[i].numpy().tolist()
-            label_row = label[i].numpy().tolist()
+            pred_row = pred[i].cpu().numpy().tolist()
+            label_row = label[i].cpu().numpy().tolist()
 
             pred_row, label_row = self.__delete_ignore_index(pred_row, label_row)
             list_of_predictions.append(pred_row)

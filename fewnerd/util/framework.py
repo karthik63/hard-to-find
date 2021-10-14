@@ -261,7 +261,7 @@ class FewShotNERModel(nn.Module):
         wrong_outer_span = self.__get_wrong_outer_span__(pred_span, label_span)
         return wrong_within_span, wrong_outer_span, total_correct_span
 
-    def get_predictions(self, pred, label):
+    def get_predictions(self, pred, label, queries_to_save):
         '''
                 return entity level count of total prediction, true labels, and correct prediction
                 '''
@@ -269,6 +269,9 @@ class FewShotNERModel(nn.Module):
         list_of_predictions = []
         list_of_labels = []
 
+        a = sum([len(x) for x in queries_to_save])
+
+        print('AAAAAAAAAAAAAAAAAAAAAAAAAA', a)
         print('AAAAAAAAAAAAAAAAAAAAAAAA', pred.shape)
         print('AAAAAAAAAAAAAAAAAAAAAAAAAA', pred[0].cpu().numpy())
 
@@ -574,33 +577,37 @@ class FewShotNERFramework:
             while it + 1 < eval_iter:
                 for _, (support, query, query_words, query_labels) in tqdm(enumerate(eval_dataset)):
 
-                    print('AAAAAAAAAAA', query_words)
-                    print('AAAAAAAAAAA', len(query_words[0]))
-                    print('AAAAAAAAAAA', query_labels)
-                    print('AAAAAAAAAAA', len(query_labels[0]))
+                    # print('AAAAAAAAAAA', query_words)
+                    # print('AAAAAAAAAAA', len(query_words[0]))
+                    # print('AAAAAAAAAAA', query_labels)
+                    # print('AAAAAAAAAAA', len(query_labels[0]))
 
                     if torch.cuda.is_available():
                         for k in support:
                             if k != 'label' and k != 'sentence_num':
                                 support[k] = support[k].cuda()
                                 query[k] = query[k].cuda()
-                        label = label.cuda()
+                    label = torch.cat(query['label'], 0)
+                    label = label.cuda()
+
                     logits, pred = model(support, query)
+
+                    # label_copy = query['label']
 
                     print('AAAAAAAAAAAA', logits.shape)
                     print('AAAAAAAAAAAAA', pred.shape)
                     queries_to_save = query_labels[0]
-                    labels_to_save = model.get_predictions(pred, label)
+                    labels_to_save = model.get_predictions(pred, label, queries_to_save)
 
-                    # print('AAAAAAAAAAAAAAAAAA', queries_to_save)
-                    # print('AAAAAAAAAAAAAAAAAA', len(queries_to_save))
-                    # print('AAAAAAAAAAAAAAAAAA', labels_to_save)
-                    # print('AAAAAAAAAAAAAAAAAA', len(labels_to_save))
+                    print('AAAAAAAAAAAAAAAAAA', queries_to_save)
+                    print('AAAAAAAAAAAAAAAAAA', len(queries_to_save))
+                    print('AAAAAAAAAAAAAAAAAA', labels_to_save)
+                    print('AAAAAAAAAAAAAAAAAA', len(labels_to_save))
 
                     # print('ooooooooooooooooooooooo', support)
                     # print('ooooooooooooooooooooooo', query)
 
-                    label = torch.cat(query['label'], 0)
+
 
                     if self.viterbi:
                         pred = self.viterbi_decode(logits, query['label'])

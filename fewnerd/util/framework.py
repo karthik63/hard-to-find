@@ -276,10 +276,10 @@ class FewShotNERModel(nn.Module):
         print('AAAAAAAAAAAAAAAAAAAAAAAA', label.shape)
         print('AAAAAAAAAAAAAAAAAAAAAAAAAA', pred[0].cpu().numpy())
 
+        pred, label = self.__delete_ignore_index(pred, label)
+
         pred_row = pred.cpu().numpy().tolist()
         label_row = label.cpu().numpy().tolist()
-
-        pred_row, label_row = self.__delete_ignore_index(pred_row, label_row)
 
         print('CCCCCCCCCCCC', len(pred_row))
         print('CCCCCCCCCCCCCCCCCCCCCCCC', len(label_row))

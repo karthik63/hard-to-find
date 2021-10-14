@@ -286,6 +286,8 @@ class FewShotNERModel(nn.Module):
 
         prev_len = 0
 
+        print('hhhhhhhhhhhhhhhh', query['label2tag'])
+
         for label_row in queries_to_save:
             len_row = len(label_row)
             truncated = pred_row[prev_len:len_row]

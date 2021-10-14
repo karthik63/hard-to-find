@@ -281,11 +281,11 @@ class FewShotNERModel(nn.Module):
         pred_row = pred.cpu().numpy().tolist()
         label_row = label.cpu().numpy().tolist()
 
-        print('CCCCCCCCCCCC', len(pred_row))
-        print('CCCCCCCCCCCCCCCCCCCCCCCC', len(label_row))
-
-        print('ddddddddd', pred_row)
-        print('dddddddd', query['label2tag'][0])
+        # print('CCCCCCCCCCCC', len(pred_row))
+        # print('CCCCCCCCCCCCCCCCCCCCCCCC', len(label_row))
+        #
+        # print('ddddddddd', pred_row)
+        # print('dddddddd', query['label2tag'][0])
 
         prev_len = 0
 
@@ -302,13 +302,13 @@ class FewShotNERModel(nn.Module):
             prev_len += len_row
 
         # list_of_predictions.append(pred_row)
-        for i in list_of_predictions:
-            print(len(i))
-
-        print('00000000000000000000')
-
-        for i in queries_to_save:
-            print(len(i))
+        # for i in list_of_predictions:
+        #     print(len(i))
+        #
+        # print('00000000000000000000')
+        #
+        # for i in queries_to_save:
+        #     print(len(i))
 
         return list_of_predictions
 
@@ -632,16 +632,16 @@ class FewShotNERFramework:
 
                     to_save.append(str({'query': {'label': labels_to_save}}) + '\n')
 
-                    print('AAAAAAAAAAAAAAAAAA', queries_to_save)
-                    print('AAAAAAAAAAAAAAAAAA', len(queries_to_save))
-                    print('AAAAAAAAAAAAAAAAAA', labels_to_save)
-                    print('AAAAAAAAAAAAAAAAAA', len(labels_to_save))
+                    # print('AAAAAAAAAAAAAAAAAA', queries_to_save)
+                    # print('AAAAAAAAAAAAAAAAAA', len(queries_to_save))
+                    # print('AAAAAAAAAAAAAAAAAA', labels_to_save)
+                    # print('AAAAAAAAAAAAAAAAAA', len(labels_to_save))
 
                     # print('ooooooooooooooooooooooo', support)
                     # print('ooooooooooooooooooooooo', query)
 
-                    print(to_save[0])
-                    print(to_save[1])
+                    # print(to_save[0])
+                    # print(to_save[1])
 
                     if self.viterbi:
                         pred = self.viterbi_decode(logits, query['label'])

@@ -584,7 +584,6 @@ class FewShotNERFramework:
                             if k != 'label' and k != 'sentence_num':
                                 support[k] = support[k].cuda()
                                 query[k] = query[k].cuda()
-                        label = torch.cat(query['label'], 0)
                         label = label.cuda()
                     logits, pred = model(support, query)
 
@@ -593,13 +592,15 @@ class FewShotNERFramework:
                     queries_to_save = query_labels[0]
                     labels_to_save = model.get_predictions(pred, label)
 
-                    print('AAAAAAAAAAAAAAAAAA', queries_to_save)
-                    print('AAAAAAAAAAAAAAAAAA', len(queries_to_save))
-                    print('AAAAAAAAAAAAAAAAAA', labels_to_save)
-                    print('AAAAAAAAAAAAAAAAAA', len(labels_to_save))
+                    # print('AAAAAAAAAAAAAAAAAA', queries_to_save)
+                    # print('AAAAAAAAAAAAAAAAAA', len(queries_to_save))
+                    # print('AAAAAAAAAAAAAAAAAA', labels_to_save)
+                    # print('AAAAAAAAAAAAAAAAAA', len(labels_to_save))
 
                     # print('ooooooooooooooooooooooo', support)
                     # print('ooooooooooooooooooooooo', query)
+
+                    label = torch.cat(query['label'], 0)
 
                     if self.viterbi:
                         pred = self.viterbi_decode(logits, query['label'])

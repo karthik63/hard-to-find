@@ -261,7 +261,7 @@ class FewShotNERModel(nn.Module):
         wrong_outer_span = self.__get_wrong_outer_span__(pred_span, label_span)
         return wrong_within_span, wrong_outer_span, total_correct_span
 
-    def get_predictions(self, pred, label, queries_to_save):
+    def get_predictions(self, pred, label, queries_to_save, query):
         '''
                 return entity level count of total prediction, true labels, and correct prediction
                 '''
@@ -271,22 +271,32 @@ class FewShotNERModel(nn.Module):
 
         a = sum([len(x) for x in queries_to_save])
 
-        print('AAAAAAAAAAAAAAAAAAAAAAAAAA', a)
-        print('AAAAAAAAAAAAAAAAAAAAAAAA', pred.shape)
-        print('AAAAAAAAAAAAAAAAAAAAAAAA', label.shape)
-        print('AAAAAAAAAAAAAAAAAAAAAAAAAA', pred[0].cpu().numpy())
+        # print('AAAAAAAAAAAAAAAAAAAAAAAAAA', a)
+        # print('AAAAAAAAAAAAAAAAAAAAAAAA', pred.shape)
+        # print('AAAAAAAAAAAAAAAAAAAAAAAA', label.shape)
+        # print('AAAAAAAAAAAAAAAAAAAAAAAAAA', pred[0].cpu().numpy())
 
         pred, label = self.__delete_ignore_index(pred, label)
 
         pred_row = pred.cpu().numpy().tolist()
         label_row = label.cpu().numpy().tolist()
 
-        print('CCCCCCCCCCCC', len(pred_row))
-        print('CCCCCCCCCCCCCCCCCCCCCCCC', len(label_row))
+        # print('CCCCCCCCCCCC', len(pred_row))
+        # print('CCCCCCCCCCCCCCCCCCCCCCCC', len(label_row))
 
+        prev_len = 0
 
+        for label_row in queries_to_save:
+            len_row = len(label_row)
+            truncated = pred_row[prev_len:len_row]
 
-        list_of_predictions.append(pred_row)
+            truncated = [query['label2tag'][x] for x in truncated]
+
+            list_of_predictions.append(truncated)
+
+            prev_len += len_row
+
+        # list_of_predictions.append(pred_row)
 
         return list_of_predictions
 
@@ -325,12 +335,13 @@ class FewShotNERModel(nn.Module):
 
 class FewShotNERFramework:
 
-    def __init__(self, train_data_loader, val_data_loader, test_data_loader, viterbi=False, N=None, train_fname=None, tau=0.05, use_sampled_data=True):
+    def __init__(self, train_data_loader, val_data_loader, test_data_loader, opt=None, viterbi=False, N=None, train_fname=None, tau=0.05, use_sampled_data=True):
         '''
         train_data_loader: DataLoader for training.
         val_data_loader: DataLoader for validating.
         test_data_loader: DataLoader for testing.
         '''
+        self.opt = opt
         self.train_data_loader = train_data_loader
         self.val_data_loader = val_data_loader
         self.test_data_loader = test_data_loader
@@ -576,7 +587,7 @@ class FewShotNERFramework:
 
         eval_iter = min(eval_iter, len(eval_dataset))
 
-        to_save = {}
+        to_save = []
 
         with torch.no_grad():
             it = 0
@@ -600,12 +611,14 @@ class FewShotNERFramework:
 
                     # label_copy = query['label']
 
-                    print('AAAAAAAdddddAAAAA', support.keys())
-                    print('AAAAAAAAAddddddAAAAAAAAAA', query.keys())
-                    print('AAAAAAAAAAAA', logits.shape)
-                    print('AAAAAAAAAAAAA', pred.shape)
+                    # print('AAAAAAAdddddAAAAA', support.keys())
+                    # print('AAAAAAAAAddddddAAAAAAAAAA', query.keys())
+                    # print('AAAAAAAAAAAA', logits.shape)
+                    # print('AAAAAAAAAAAAA', pred.shape)
                     queries_to_save = query_labels[0]
-                    labels_to_save = model.get_predictions(pred, label, queries_to_save)
+                    labels_to_save = model.get_predictions(pred, label, queries_to_save, query)
+
+                    to_save.append(str({'query': {'label': labels_to_save}}) + '\n')
 
                     print('AAAAAAAAAAAAAAAAAA', queries_to_save)
                     print('AAAAAAAAAAAAAAAAAA', len(queries_to_save))
@@ -615,7 +628,8 @@ class FewShotNERFramework:
                     # print('ooooooooooooooooooooooo', support)
                     # print('ooooooooooooooooooooooo', query)
 
-
+                    print(to_save[0])
+                    print(to_save[1])
 
                     if self.viterbi:
                         pred = self.viterbi_decode(logits, query['label'])
@@ -647,4 +661,9 @@ class FewShotNERFramework:
             sys.stdout.write('[EVAL] step: {0:4} | [ENTITY] precision: {1:3.4f}, recall: {2:3.4f}, f1: {3:3.4f}'.format(it + 1, precision, recall, f1) + '\r')
             sys.stdout.flush()
             print("")
+
+        with open('/storage/Assignment1/fewnerd/final_logfiles/' +
+            str(self.opt.mode) + '/test_' + str(self.opt.N) + '_' + str(self.opt.K) + '.jsonl', 'w') as f:
+                f.writelines(to_save)
+
         return precision, recall, f1, fp_error, fn_error, within_error, outer_error

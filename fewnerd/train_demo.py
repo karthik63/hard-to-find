@@ -139,15 +139,15 @@ def main():
     if model_name == 'proto':
         print('use proto')
         model = Proto(word_encoder, dot=opt.dot, ignore_index=opt.ignore_index)
-        framework = FewShotNERFramework(train_data_loader, val_data_loader, test_data_loader, use_sampled_data=opt.use_sampled_data)
+        framework = FewShotNERFramework(train_data_loader, val_data_loader, test_data_loader, opt=opt, use_sampled_data=opt.use_sampled_data)
     elif model_name == 'nnshot':
         print('use nnshot')
         model = NNShot(word_encoder, dot=opt.dot, ignore_index=opt.ignore_index)
-        framework = FewShotNERFramework(train_data_loader, val_data_loader, test_data_loader, use_sampled_data=opt.use_sampled_data)
+        framework = FewShotNERFramework(train_data_loader, val_data_loader, test_data_loader, opt=opt, use_sampled_data=opt.use_sampled_data)
     elif model_name == 'structshot':
         print('use structshot')
         model = NNShot(word_encoder, dot=opt.dot, ignore_index=opt.ignore_index)
-        framework = FewShotNERFramework(train_data_loader, val_data_loader, test_data_loader, N=opt.N, tau=opt.tau, train_fname=opt.train, viterbi=True, use_sampled_data=opt.use_sampled_data)
+        framework = FewShotNERFramework(train_data_loader, val_data_loader, test_data_loader, opt=opt, N=opt.N, tau=opt.tau, train_fname=opt.train, viterbi=True, use_sampled_data=opt.use_sampled_data)
     else:
         raise NotImplementedError
 
@@ -176,7 +176,7 @@ def main():
             ckpt = 'none'
 
     # test
-    precision, recall, f1, fp, fn, within, outer = framework.eval(model, opt.test_iter, ckpt=ckpt)
+    precision, recall, f1, fp, fn, within, outer = framework.eval(model, opt.test_iter, ckpt=ckpt,)
     print("RESULT: precision: %.4f, recall: %.4f, f1:%.4f" % (precision, recall, f1))
     print('ERROR ANALYSIS: fp: %.4f, fn: %.4f, within:%.4f, outer: %.4f'%(fp, fn, within, outer))
 

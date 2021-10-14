@@ -269,7 +269,8 @@ class FewShotNERModel(nn.Module):
         list_of_predictions = []
         list_of_labels = []
 
-        print(pred.shape)
+        print('AAAAAAAAAAAAAAAAAAAAAAAA', pred.shape)
+        print('AAAAAAAAAAAAAAAAAAAAAAAAAA', pred[0].cpu().numpy())
 
         for i, row in enumerate(pred):
             pred_row = pred[i].cpu().numpy().tolist()

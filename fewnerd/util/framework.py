@@ -9,6 +9,7 @@ exp = Experiment(
     workspace="karthik63",
 )
 
+import json
 import os
 import sklearn.metrics
 import numpy as np
@@ -259,7 +260,24 @@ class FewShotNERModel(nn.Module):
         wrong_within_span = self.__get_wrong_within_span__(pred_span, label_span)
         wrong_outer_span = self.__get_wrong_outer_span__(pred_span, label_span)
         return wrong_within_span, wrong_outer_span, total_correct_span
-                
+
+    def get_predictions(self, pred, label):
+        '''
+                return entity level count of total prediction, true labels, and correct prediction
+                '''
+
+        list_of_predictions = []
+        list_of_labels = []
+
+        for i, row in enumerate(pred):
+            pred_row = pred[i].numpy().tolist()
+            label_row = label[i].numpy().tolist()
+
+            pred_row, label_row = self.__delete_ignore_index(pred_row, label_row)
+            list_of_predictions.append(pred_row)
+
+        return list_of_predictions
+
     def metrics_by_entity(self, pred, label):
         '''
         return entity level count of total prediction, true labels, and correct prediction
@@ -308,7 +326,7 @@ class FewShotNERFramework:
         if viterbi:
             abstract_transitions = get_abstract_transitions(train_fname, use_sampled_data=use_sampled_data)
             self.viterbi_decoder = ViterbiDecoder(N+2, abstract_transitions, tau)
-    
+
     def __load_model__(self, ckpt):
         '''
         ckpt: Path of the checkpoint
@@ -501,6 +519,7 @@ class FewShotNERFramework:
                 pred.append(label-1)
         return torch.tensor(pred).cuda()
 
+
     def eval(self,
             model,
             eval_iter,
@@ -545,15 +564,17 @@ class FewShotNERFramework:
 
         eval_iter = min(eval_iter, len(eval_dataset))
 
+        to_save = {}
+
         with torch.no_grad():
             it = 0
             while it + 1 < eval_iter:
                 for _, (support, query, query_words, query_labels) in tqdm(enumerate(eval_dataset)):
 
-                    print('AAAAAAAAAAA', query_words)
-                    print('AAAAAAAAAAA', len(query_words[0]))
-                    print('AAAAAAAAAAA', query_labels)
-                    print('AAAAAAAAAAA', len(query_labels[0]))
+                    # print('AAAAAAAAAAA', query_words)
+                    # print('AAAAAAAAAAA', len(query_words[0]))
+                    # print('AAAAAAAAAAA', query_labels)
+                    # print('AAAAAAAAAAA', len(query_labels[0]))
 
                     if torch.cuda.is_available():
                         for k in support:
@@ -563,6 +584,14 @@ class FewShotNERFramework:
                         label = torch.cat(query['label'], 0)
                         label = label.cuda()
                     logits, pred = model(support, query)
+
+                    queries_to_save = query_labels[0]
+                    labels_to_save = model.get_predictions(pred, label)
+
+                    print('AAAAAAAAAAAAAAAAAA', queries_to_save)
+                    print('AAAAAAAAAAAAAAAAAA', len(queries_to_save))
+                    print('AAAAAAAAAAAAAAAAAA', labels_to_save)
+                    print('AAAAAAAAAAAAAAAAAA', len(labels_to_save))
 
                     # print('ooooooooooooooooooooooo', support)
                     # print('ooooooooooooooooooooooo', query)

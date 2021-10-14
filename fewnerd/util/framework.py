@@ -291,8 +291,8 @@ class FewShotNERModel(nn.Module):
 
         # print('hhhhhhhhhhhhhhhh', query['label2tag'])
 
-        for label_row in queries_to_save:
-            len_row = len(label_row)
+        for qr in queries_to_save:
+            len_row = len(qr)
             truncated = pred_row[prev_len:len_row]
 
             truncated = [query['label2tag'][0][x] for x in truncated]
@@ -302,6 +302,13 @@ class FewShotNERModel(nn.Module):
             prev_len += len_row
 
         # list_of_predictions.append(pred_row)
+        for i in list_of_predictions:
+            print(len(i))
+
+        print('00000000000000000000')
+
+        for i in queries_to_save:
+            print(len(i))
 
         return list_of_predictions
 

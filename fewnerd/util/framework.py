@@ -284,6 +284,8 @@ class FewShotNERModel(nn.Module):
         print('CCCCCCCCCCCC', len(pred_row))
         print('CCCCCCCCCCCCCCCCCCCCCCCC', len(label_row))
 
+
+
         list_of_predictions.append(pred_row)
 
         return list_of_predictions
@@ -598,6 +600,8 @@ class FewShotNERFramework:
 
                     # label_copy = query['label']
 
+                    print('AAAAAAAdddddAAAAA', support.keys())
+                    print('AAAAAAAAAddddddAAAAAAAAAA', query.keys())
                     print('AAAAAAAAAAAA', logits.shape)
                     print('AAAAAAAAAAAAA', pred.shape)
                     queries_to_save = query_labels[0]

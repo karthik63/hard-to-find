@@ -271,10 +271,10 @@ class FewShotNERModel(nn.Module):
 
         a = sum([len(x) for x in queries_to_save])
 
-        # print('AAAAAAAAAAAAAAAAAAAAAAAAAA', a)
-        # print('AAAAAAAAAAAAAAAAAAAAAAAA', pred.shape)
-        # print('AAAAAAAAAAAAAAAAAAAAAAAA', label.shape)
-        # print('AAAAAAAAAAAAAAAAAAAAAAAAAA', pred[0].cpu().numpy())
+        print('AAAAAAAAAAAAAAAAAAAAAAAAAA', a)
+        print('AAAAAAAAAAAAAAAAAAAAAAAA', pred.shape)
+        print('AAAAAAAAAAAAAAAAAAAAAAAA', label.shape)
+        print('AAAAAAAAAAAAAAAAAAAAAAAAAA', pred[0].cpu().numpy())
 
         pred, label = self.__delete_ignore_index(pred, label)
 

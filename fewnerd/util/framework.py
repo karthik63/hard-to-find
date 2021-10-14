@@ -286,13 +286,13 @@ class FewShotNERModel(nn.Module):
 
         prev_len = 0
 
-        print('hhhhhhhhhhhhhhhh', query['label2tag'])
+        # print('hhhhhhhhhhhhhhhh', query['label2tag'])
 
         for label_row in queries_to_save:
             len_row = len(label_row)
             truncated = pred_row[prev_len:len_row]
 
-            truncated = [query['label2tag'][x] for x in truncated]
+            truncated = [query['label2tag'][0][x] for x in truncated]
 
             list_of_predictions.append(truncated)
 
